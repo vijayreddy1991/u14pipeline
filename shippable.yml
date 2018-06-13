@@ -83,3 +83,8 @@ jobs:
     steps:
       - IN: u14javall-ci_ciRepo
       - IN: u14-services_runCI
+  - name: u14rub-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14rub-ci_ciRepo 
+      - IN: u14-services_runCI
