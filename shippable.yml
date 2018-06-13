@@ -53,3 +53,33 @@ jobs:
     steps:
       - IN: u14pytall-ci_ciRepo 
       - IN: u14-services_runCI
+  - name: u14php-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14php-ci_ciRepo
+      - IN: u14-services_runCI
+  - name: u14scala-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14scala-ci_ciRepo 
+      - IN: u14-services_runCI
+  - name: u14node-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14node-ci_ciRepo 
+      - IN: u14-services_runCI
+  - name: u14clo-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14clo-ci_ciRepo 
+      - IN: u14-services_runCI
+  - name: u14cpp-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14cpp-ci_ciRepo
+      - IN: u14-services_runCI
+  - name: u14javall-ci_runCI
+    type: runCI
+    steps:
+      - IN: u14javall-ci_ciRepo
+      - IN: u14-services_runCI
