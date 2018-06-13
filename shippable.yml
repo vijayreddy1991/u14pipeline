@@ -47,9 +47,9 @@ jobs:
     type: runCI
     steps:
       - IN: u14go-ci_ciRepo  
-      - IN:u14
+      - IN: u14-services_runCI
   - name: u14pytall-ci_runCI
     type: runCI
     steps:
       - IN: u14pytall-ci_ciRepo 
-      - IN: u14
+      - IN: u14-services_runCI
