@@ -1,0 +1,45 @@
+jobs:
+  - name: u14
+    type: runSh
+    steps:
+      - TASK:
+          runtime:
+            options:
+              imageName: "drydock/u14"
+              imageTag: master
+          script:
+            
+             - java -version  
+             - nodejs --version
+             - yarn -version
+             - source /usr/local/rvm/scripts/rvm
+             - ruby -v
+             - python -V
+             - pip --version
+             - virtualenv --version
+             - git --version
+             - aws --version
+             - az --version
+             - jfrog --version
+             - gcloud version
+             - git lfs version
+             - kubectl version --client
+             - kops version
+             - helm version --client
+             - doctl version
+             - ansible --version
+             - pip show boto
+             - pip show boto3
+             - pip show apache-libcloud
+             - pip show azure
+             - pip show dopy
+             - packer --version
+             - jq --version
+             - terraform --version
+             - openstack --version
+             - eb --version
+  - name: u14-services_runCI
+    type: runCI
+    steps:
+      - IN: u14-services_ciRepo             
+      - IN: u14       
