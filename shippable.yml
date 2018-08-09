@@ -38,6 +38,7 @@ jobs:
              - terraform --version
              - openstack --version
              - eb --version
+             - npm --version
   - name: u14-services_runCI
     type: runCI
     steps:
