@@ -1,5 +1,5 @@
 jobs:
-  - name: u14
+  - name: u14base
     type: runSh
     steps:
       - TASK:
@@ -43,7 +43,7 @@ jobs:
     type: runCI
     steps:
       - IN: u14-services_ciRepo             
-      - IN: u14   
+      - IN: u14base   
   - name: u14go-ci_runCI
     type: runCI
     steps:
