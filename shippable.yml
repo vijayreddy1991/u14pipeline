@@ -1,7 +1,7 @@
 resources:
    - name: sample_java_repo_test
      type: gitRepo
-     integrationName: git
+     integrationName: github
      repoPath: vijayreddy1991/u14pipeline
      configuration:
         branches:
