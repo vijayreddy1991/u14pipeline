@@ -1,90 +1,185 @@
-jobs:
-  - name: u14base
-    type: runSh
+resources:
+   - name: sample_java_repo_test
+     type: gitRepo
+     integrationName: git
+     repoPath: vijayreddy1991/u14pipeline
+     configuration:
+        branches:
+           except: "*test"
+           only: "master*"
+        tags:
+           except: none
+           only: none   
+        buildOnCommit: true
+        buildOnPullRequest: false
+        buildOnPullRequestClose: false
+        buildOnRelease: true
+        buildOnTagPush: false
+        buildOnFileCommit: "*test"
+        shallowDepth: 2
+        gitConfig: 
+          - dont_know
+          - dont_know_2
+     initialVersion:
+       sha: master
+       
+pipelines:
+  - name: test_pipeline_1
     steps:
-      - TASK:
-          runtime:
-            options:
-              imageName: "drydock/u14"
-              imageTag: master
-          script:
-             - java -version  
-             - nodejs --version
-             - yarn -version
-             - source /usr/local/rvm/scripts/rvm
-             - ruby -v
-             - python -V
-             - pip --version
-             - virtualenv --version
-             - git --version
-             - aws --version
-             - az --version
-             - jfrog --version
-             - gcloud version
-             - git lfs version
-             - kubectl version --client
-             - kops version
-             - helm version --client
-             - doctl version
-             - ansible --version
-             - pip show boto
-             - pip show boto3
-             - pip show apache-libcloud
-             - pip show azure
-             - pip show dopy
-             - packer --version
-             - jq --version
-             - terraform --version
-             - openstack --version
-             - eb --version
-             - npm --version
-  - name: u14-services_runCI
-    type: runCI
-    steps:
-      - IN: u14-services_ciRepo             
-      - IN: u14base   
-  - name: u14go-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14go-ci_ciRepo  
-      - IN: u14-services_runCI
-  - name: u14pytall-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14pytall-ci_ciRepo 
-      - IN: u14-services_runCI
-  - name: u14php-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14php-ci_ciRepo
-      - IN: u14-services_runCI
-  - name: u14scala-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14scala-ci_ciRepo 
-      - IN: u14-services_runCI
-  - name: u14node-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14node-ci_ciRepo 
-      - IN: u14-services_runCI
-  - name: u14clo-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14clo-ci_ciRepo 
-      - IN: u14-services_runCI
-  - name: u14cpp-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14cpp-ci_ciRepo
-      - IN: u14-services_runCI
-  - name: u14javall-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14javall-ci_ciRepo
-      - IN: u14-services_runCI
-  - name: u14rub-ci_runCI
-    type: runCI
-    steps:
-      - IN: u14rub-ci_ciRepo 
-      - IN: u14-services_runCI
+      - name: in_trigger_step
+        type: runSh
+        group: test_group
+        setup:
+          environmentVariables:
+            normal:
+              - ENV1: value1
+              - ENV2: value2
+            encrypted:
+              - SECURE_ENV1: test_value
+              - SECURE_ENV2: test_value
+          runtime: onHost
+        onExecute:
+          - echo "executing task command 1"
+          - echo "executing task command 2"
+
+      - name: in_trigger_step_2
+        type: runSh
+        group: test_group
+        setup:
+          environmentVariables:
+            normal:
+              - ENV1: value1
+              - ENV2: value2
+            encrypted:
+              - SECURE_ENV1: test_value
+              - SECURE_ENV2: test_value
+          runtime: onHost
+        onExecute:
+          - echo "executing task command 1"
+          - echo "executing task command 2"
+
+      - name: main_step
+        type: runSh
+        group: test_group 
+        syntaxVersion: "2018-03-12"
+        priority: 9999
+        timeoutMinutes: 40
+        cache: true
+        setup:
+          environmentVariables:
+            normal:
+              - ENV1: value1
+              - ENV2: value2
+            encrypted:
+              - SECURE_ENV1: test_value
+              - SECURE_ENV2: test_value
+          runtime: onHost
+        dependsOn:
+          passive:
+            # steps:
+            #   - passive_step
+            integrations:
+              - github-subint
+          trigger:
+            resources:
+              - sample_java_repo_test
+            steps:
+              - in_trigger_step
+              - in_trigger_step_2
+        onStart:
+          - echo "Prepping build environment"
+        onExecute:
+          - echo "executing task command 1"
+          - echo "executing task command 2"
+        onSuccess:
+          - echo "Job well done!"
+        onFailure:
+          - echo "uh oh, something went wrong"
+        onComplete:
+          - echo "Cleaning up some stuff"
+        onCancel:
+          - echo "Someone cancelled the job"
+
+      - name: main_final
+        type: runSh
+        group: test_group 
+        syntaxVersion: "2018-03-12"
+        priority: 9999
+        timeoutMinutes: 40
+        cache: true
+        setup:
+          environmentVariables:
+            normal:
+              - ENV1: value1
+              - ENV2: value2
+            encrypted:
+              - SECURE_ENV1: test_value
+              - SECURE_ENV2: test_value
+          runtime: onHost
+        dependsOn:
+          passive:
+            # steps:
+            #   - passive_step
+            integrations:
+              - github-subint
+          trigger:
+            resources:
+              - sample_java_repo_test
+            steps:
+              - main_step
+#               - in_trigger_step_2
+        onStart:
+          - echo "Prepping build environment"
+        onExecute:
+          - echo "executing task command 1"
+          - echo "executing task command 2"
+        onSuccess:
+          - echo "Job well done!"
+        onFailure:
+          - echo "uh oh, something went wrong"
+        onComplete:
+          - echo "Cleaning up some stuff"
+        onCancel:
+          - echo "Someone cancelled the job"
+      - name: main_end2
+        type: runSh
+        group: test_group 
+        syntaxVersion: "2018-03-12"
+        priority: 9999
+        timeoutMinutes: 40
+        cache: true
+        setup:
+          environmentVariables:
+            normal:
+              - ENV1: value1
+              - ENV2: value2
+            encrypted:
+              - SECURE_ENV1: test_value
+              - SECURE_ENV2: test_value
+          runtime: onHost
+        dependsOn:
+          passive:
+            # steps:
+            #   - passive_step
+            integrations:
+              - github-subint
+          trigger:
+            resources:
+              - sample_java_repo_test
+            steps:
+              - main_final
+              - main_step
+              - in_trigger_step_2
+        onStart:
+          - echo "Prepping build environment"
+        onExecute:
+          - echo "executing task command 1"
+          - echo "executing task command 2"
+        onSuccess:
+          - echo "Job well done!"
+        onFailure:
+          - echo "uh oh, something went wrong"
+        onComplete:
+          - echo "Cleaning up some stuff"
+        onCancel:
+          - echo "Someone cancelled the job"
